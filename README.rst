@@ -11,12 +11,14 @@
 
 
 ===================
-ckanext-s3filestore
+ckanext-s3filestore (Ceph Version)
 ===================
 
 .. Put a description of your extension here:
 
 Use Amazon S3 as a filestore for resources.
+
+Change: Allowing to use self-held Ceph storage, which also provide S3 API.
 
 
 ------------
@@ -42,7 +44,8 @@ To install ckanext-s3filestore:
 
 2. Install the ckanext-s3filestore Python package into your virtual environment::
 
-     pip install ckanext-s3filestore
+     git clone https://github.com/HolySparky/ckan_ceph_plugin.git
+     cd ckan_ceph_plugin
 
 3. Add ``s3filestore`` to the ``ckan.plugins`` setting in your CKAN
    config file (by default the config file is located at
@@ -62,6 +65,8 @@ Required::
     ckanext.s3filestore.aws_access_key_id = Your-AWS-Access-Key-ID
     ckanext.s3filestore.aws_secret_access_key = Your-AWS-Secret-Access-Key
     ckanext.s3filestore.aws_bucket_name = a-bucket-to-store-your-stuff
+    ckanext.s3filestore.host_name = HOST_IP_OF_CEPH_S3
+    ckanext.s3filestore.port_name = PORT_OF_CEPH_S3_API
 
 Optional::
 
