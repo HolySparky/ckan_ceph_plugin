@@ -1,5 +1,6 @@
 import sys
 import boto
+import boto.s3.connection
 from pylons import config
 from ckan.plugins import toolkit
 
@@ -29,7 +30,9 @@ class TestConnection(toolkit.CkanCommand):
         exit = False
         for key in ('ckanext.s3filestore.aws_access_key_id',
                     'ckanext.s3filestore.aws_secret_access_key',
-                    'ckanext.s3filestore.aws_bucket_name'):
+                    'ckanext.s3filestore.aws_bucket_name',
+                    'ckanext.s3filestore.host_name',
+                    'ckanext.s3filestore.port_name'):
             if not config.get(key):
                 print 'You must set the "{0}" option in your ini file'.format(
                     key)
@@ -41,8 +44,17 @@ class TestConnection(toolkit.CkanCommand):
         bucket_name = config.get('ckanext.s3filestore.aws_bucket_name')
         public_key = config.get('ckanext.s3filestore.aws_access_key_id')
         secret_key = config.get('ckanext.s3filestore.aws_secret_access_key')
+        s3_host = config.get('ckanext.s3filestore.host_name')
+        s3_port = int(config.get('ckanext.s3filestore.port_name'))
 
-        S3_conn = boto.connect_s3(public_key, secret_key)
+        #S3_conn = boto.connect_s3(public_key, secret_key)
+
+        S3_conn = boto.connect_s3(
+        aws_access_key_id = public_key,
+        aws_secret_access_key = secret_key,
+        host = s3_host, port = s3_port,
+        is_secure=False, calling_format = boto.s3.connection.OrdinaryCallingFormat(),
+        )
 
         # Check if bucket exists
         bucket = S3_conn.lookup(bucket_name)

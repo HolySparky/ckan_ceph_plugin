@@ -6,6 +6,7 @@ import datetime
 import mimetypes
 
 import boto
+import boto.s3.connection
 
 import ckan.model as model
 import ckan.lib.munge as munge
@@ -36,9 +37,18 @@ class BaseS3Uploader(object):
         '''Return a boto bucket, creating it if it doesn't exist.'''
         p_key = config.get('ckanext.s3filestore.aws_access_key_id')
         s_key = config.get('ckanext.s3filestore.aws_secret_access_key')
+        s3_host = config.get('ckanext.s3filestore.host_name')
+        s3_port = int(config.get('ckanext.s3filestore.port_name'))
 
         # make s3 connection
-        S3_conn = boto.connect_s3(p_key, s_key)
+        #S3_conn = boto.connect_s3(p_key, s_key)
+
+        S3_conn = boto.connect_s3(
+        aws_access_key_id = p_key,
+        aws_secret_access_key = s_key,
+        host = s3_host, port = s3_port,
+        is_secure=False, calling_format = boto.s3.connection.OrdinaryCallingFormat(),
+        )
 
         # make sure bucket exists and that we can access
         try:
